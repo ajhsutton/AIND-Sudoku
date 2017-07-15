@@ -3,7 +3,7 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: *Student should provide answer here*
+A: The new constraint is: "for each box b_i with only two posibilities [a_1, a_2] , if a box b_j within peers[b_i] shares the same possiblities: remove [a_1,a_2] from all b_k, for k != i,j and b_k belongs to peers[b_i] and peers[b_j].
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
