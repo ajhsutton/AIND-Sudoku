@@ -3,11 +3,15 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A: The new constraint is: "for each box b_i with only two posibilities [a_1, a_2] , if a box b_j within peers[b_i] shares the same possiblities: remove [a_1,a_2] from all b_k, for k != i,j and b_k belongs to peers[b_i] and peers[b_j].
+A: The NAked Twins problem requires addition of a new constraint that represents the "Naked Twin" relationship. This relationship says that if two boxes are peers within a common unit and share the same two possiblities for their values, then the two possiblities may be removed from all other peers within the unit.
+
+More formally:
+    "for each box b_i with only two value posibilities [a_1, a_2] , if a box b_j within a unit of b_i's peers "u_k" shares the same possiblities then remove [a_1,a_2] from the possiblities of all members of u_k, expect b_i and b_j."
+    
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A: *Student should provide answer here*
+A: Diagonal Sudoku introduces an additional set of peers for some boxes on the board. In this case, the constraint relationships should now be applied along the two sets of diagonal elements on the puzzle in addition to the existing units. Thus, new units must be formed to represent the diagonal relatinoship. All existing onstraints may now be applied to the new 'diagonal' units in adition to the existing conventional sudoku units.
 
 ### Install
 
