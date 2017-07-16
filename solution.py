@@ -39,7 +39,36 @@ def assign_value(values, box, value):
     values[box] = value
     if len(value) == 1:
         assignments.append(values.copy())
-    return values
+    return values        
+
+def get_twins(values):
+    '''Filter values to find candidates shared by 2 boxes within a common peer set.
+       '''
+    # Identify boxes with only 2 value options.
+    twin_candidates = {box: values[box] for box in boxes if len(values[box]) == 2} 
+    
+     # List of Naked Twins
+    naked_twins_list = []
+    
+    # For each candidate box "box_i", check if any peers are also twin candidates.
+    for box_i in twin_candidates:
+        for peer_unit in peer_sets[box_i]:
+            for box_j in peer_unit:
+                if box_j in twin_candidates and box_i != box_j and values[box_i] == values[box_j]:
+                    # Valid naked twin pair found
+                    naked_twins_list.append((box_i, box_j, values[box_i]))
+    return naked_twins_list
+
+def clear_twin_peers(box_i, box_j, val, puzzle):
+    # Helper method for clearing "val" from only the common peers for boxes i & j
+    units_i = peer_sets[box_i]
+    for unit in units_i:
+        if box_i in unit and box_j in unit:
+            for target in unit:
+                if target != box_i and target != box_j:
+                    for v in val:
+                        puzzle = assign_value(puzzle, target, puzzle[target].replace(v, ''))
+    return puzzle
 
 def naked_twins(values):
     """Eliminate values using the naked twins strategy.
@@ -51,8 +80,13 @@ def naked_twins(values):
     """
 
     # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
+    naked_twins_list = get_twins(values)
 
+    # Valid naked Twins found, remove twin values from all peers
+    for box_i, box_j, val in naked_twins_list:
+        values = clear_twin_peers(box_i, box_j, val, values)
+    return values
+    
 def cross(A, B):
     "Cross product of elements in A and elements in B."
     pass
@@ -111,6 +145,7 @@ def reduce_puzzle(values):
 
         values = eliminate(values)
         values = only_choice(values)
+        values = naked_twins(values) # Naked Twins constraint added
 
         # Check how many boxes have a determined value, to compare
         solved_values_after = len([box for box in values.keys() if len(values[box]) == 1])
